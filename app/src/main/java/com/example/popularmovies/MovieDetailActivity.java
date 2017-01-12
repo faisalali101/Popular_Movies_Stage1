@@ -46,7 +46,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         if (receivedIntent == null || !receivedIntent.hasExtra(Intent.EXTRA_STREAM)) {
             showError();
         }
-        mMovieSelected = (Movie) receivedIntent.getSerializableExtra(Intent.EXTRA_STREAM);
+        mMovieSelected = (Movie) receivedIntent.getParcelableExtra(Intent.EXTRA_STREAM);
         if (mMovieSelected == null) {
             showError();
         }

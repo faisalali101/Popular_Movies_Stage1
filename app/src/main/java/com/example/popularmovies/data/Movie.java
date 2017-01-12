@@ -16,12 +16,23 @@
 package com.example.popularmovies.data;
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.example.popularmovies.R;
 
-import java.io.Serializable;
+public class Movie implements Parcelable {
+    public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
+        @Override
+        public Movie createFromParcel (Parcel parcel) {
+            return new Movie(parcel);
+        }
 
-public class Movie implements Serializable {
+        @Override
+        public Movie[] newArray (int size) {
+            return new Movie[size];
+        }
+    };
     private String originalTitle, overview, releaseDate, posterPath, backdropPath,
             originalLanguage, title;
     private int id, voteCount;
@@ -54,6 +65,23 @@ public class Movie implements Serializable {
         this.video = video;
         this.adult = adult;
         this.genreIds = genreIds;
+    }
+
+    private Movie (Parcel parcel) {
+        originalTitle = parcel.readString();
+        overview = parcel.readString();
+        releaseDate = parcel.readString();
+        posterPath = parcel.readString();
+        backdropPath = parcel.readString();
+        originalLanguage = parcel.readString();
+        title = parcel.readString();
+        id = parcel.readInt();
+        voteCount = parcel.readInt();
+        voteAverage = parcel.readDouble();
+        popularity = parcel.readDouble();
+        video = parcel.readInt() == 1;
+        adult = parcel.readInt() == 1;
+        genreIds = parcel.createIntArray();
     }
 
     public String getOriginalTitle () {
@@ -128,5 +156,28 @@ public class Movie implements Serializable {
                context.getString(R.string.plot_synopsis) +
                ": " +
                overview;
+    }
+
+    @Override
+    public int describeContents () {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel (Parcel parcel, int i) {
+        parcel.writeString(originalTitle);
+        parcel.writeString(overview);
+        parcel.writeString(releaseDate);
+        parcel.writeString(posterPath);
+        parcel.writeString(backdropPath);
+        parcel.writeString(originalLanguage);
+        parcel.writeString(title);
+        parcel.writeInt(id);
+        parcel.writeInt(voteCount);
+        parcel.writeDouble(voteAverage);
+        parcel.writeDouble(popularity);
+        parcel.writeInt(video ? 1 : 0);
+        parcel.writeInt(adult ? 1 : 0);
+        parcel.writeIntArray(genreIds);
     }
 }
