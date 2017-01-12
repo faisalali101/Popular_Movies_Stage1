@@ -19,7 +19,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -32,10 +31,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.popularmovies.data.Movie;
+import com.example.popularmovies.task.FetchMovieListTask;
+import com.example.popularmovies.task.OnMovieListFetchComplete;
 import com.example.popularmovies.utilities.TMDBUtils;
 
 public class MainActivity extends AppCompatActivity
-        implements MovieListAdapter.MovieListOnClickHandler {
+        implements MovieListAdapter.MovieListOnClickHandler, OnMovieListFetchComplete {
     private static final String PREFERENCE_NAME = "POPULAR_MOVIES";
     private static final String SORT_TYPE = "SORT_TYPE";
 
@@ -137,7 +138,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void fetchMovieList (TMDBUtils.LIST_TYPE type) {
-        new FetchMovieListTask().execute(type);
+        new FetchMovieListTask(mContext, mProgressBar, this).execute(type);
     }
 
     private void showErrorMessage () {
@@ -150,36 +151,13 @@ public class MainActivity extends AppCompatActivity
         mRecyclerView.setVisibility(View.VISIBLE);
     }
 
-    private class FetchMovieListTask extends AsyncTask<TMDBUtils.LIST_TYPE, Void, Movie[]> {
-        @Override
-        protected void onPreExecute () {
-            mProgressBar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected Movie[] doInBackground (TMDBUtils.LIST_TYPE... list_types) {
-            if (list_types == null || list_types.length == 0) {
-                return null;
-            }
-
-            String
-                    responseFromTMDB =
-                    TMDBUtils.getResponseFromTMDB(TMDBUtils.buildURLFor(mContext,
-                                                                        list_types[0]));
-            Movie[]
-                    movies = TMDBUtils.getMovieDetailsfromJSON(responseFromTMDB);
-            return movies;
-        }
-
-        @Override
-        protected void onPostExecute (Movie[] movies) {
-            mProgressBar.setVisibility(View.INVISIBLE);
-            if (movies == null || movies.length == 0) {
-                showErrorMessage();
-            } else {
-                showResult();
-                mMovieListAdapter.setList(movies);
-            }
+    @Override
+    public void onFetchComplete (Movie[] movies) {
+        if (movies == null || movies.length == 0) {
+            showErrorMessage();
+        } else {
+            showResult();
+            mMovieListAdapter.setList(movies);
         }
     }
 }
