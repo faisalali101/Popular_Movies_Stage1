@@ -1,0 +1,2 @@
+To use the application, please add a file named 'API_KEY' in the assets folder.
+This file should contain API Key generated from TMDB website for using their APIs.
