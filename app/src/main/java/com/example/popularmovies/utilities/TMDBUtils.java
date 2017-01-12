@@ -193,6 +193,4 @@ public class TMDBUtils {
     public enum LIST_TYPE {Popular, Top_Rated}
 
     public enum IMAGE_SIZE {w92, w154, w185, w342, w500, w780, original}
-
-    ;
 }
