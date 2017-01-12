@@ -53,7 +53,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         TMDBUtils.fetchImage(mContext,
                              ((ImageView) findViewById(R.id.iv_movie_backdrop)),
-                             mMovieSelected.getBackdropPath(),
+                             mMovieSelected.getPosterPath(),
                              TMDBUtils.IMAGE_SIZE.w780);
         ((TextView) findViewById(R.id.tv_movie_title)).setText(mMovieSelected.getTitle());
         ((TextView) findViewById(R.id.tv_movie_release_date)).setText(mMovieSelected.getReleaseDate());
